@@ -240,4 +240,26 @@
         "description": "การนำความรู้ไปใช้วิเคราะห์ข้อมูลและจัดทำรายงาน",
         "sort_order": 213
       }
+    ],
+    "futureLearning": [
+      {
+        "label": "Prompt Engineering",
+        "value": 11,
+        "description": "ความต้องการเรียนรู้ด้านการเขียนคำสั่ง AI",
+        "sort_order": 221
+      },
+      {
+        "label": "Data Analysis with AI",
+        "value": 66,
+        "description": "ความต้องการเรียนรู้ด้านการวิเคราะห์ข้อมูลด้วย AI",
+        "sort_order": 222
+      },
+      {
+        "label": "Dashboard & Automation",
+        "value": 13,
+        "description": "ความต้องการเรียนรู้ด้าน Dashboard และ Automation",
+        "sort_order": 223
+      }
     ]
+  }
+}
