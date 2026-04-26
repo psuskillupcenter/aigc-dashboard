@@ -82,15 +82,6 @@
       "sub_value": "Standards-based",
       "description": "ออกแบบตามบทบาทของผู้เรียนและเชื่อมโยงกับกรอบมาตรฐาน",
       "sort_order": 14
-    },
-    {
-      "section": "framework",
-      "type": "card",
-      "label": "Dashboard Purpose",
-      "value": "AI-driven",
-      "sub_value": "Insight Dashboard",
-      "description": "ใช้ข้อมูลเพื่อสนับสนุนการพัฒนา ไม่ใช่เพื่อจัดอันดับหน่วยงาน",
-      "sort_order": 15
     }
   ],
   "competency": [
