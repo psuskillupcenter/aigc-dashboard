@@ -73,15 +73,6 @@
       "sub_value": "frameworks",
       "description": "กรอบสมรรถนะและมาตรฐานสากลที่ใช้เป็นฐานในการออกแบบ",
       "sort_order": 13
-    },
-    {
-      "section": "framework",
-      "type": "card",
-      "label": "Design Logic",
-      "value": "Role-based",
-      "sub_value": "Standards-based",
-      "description": "ออกแบบตามบทบาทของผู้เรียนและเชื่อมโยงกับกรอบมาตรฐาน",
-      "sort_order": 14
     }
   ],
   "competency": [
