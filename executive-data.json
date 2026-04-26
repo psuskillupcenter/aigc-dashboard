@@ -44,15 +44,6 @@
       "sub_value": "score",
       "description": "ค่าเฉลี่ยสมรรถนะรวมจากการประเมิน",
       "sort_order": 5
-    },
-    {
-      "section": "snapshot",
-      "type": "kpi",
-      "label": "Self-Reported Improvement",
-      "value": 1.85,
-      "sub_value": "level",
-      "description": "ค่าเฉลี่ยพัฒนาการจากการประเมินตนเองก่อนและหลังเรียน",
-      "sort_order": 6
     }
   ],
   "framework": [
