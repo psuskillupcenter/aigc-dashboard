@@ -1,32 +1,55 @@
 async function loadDashboard() {
-  const response = await fetch("data.json");
-  const data = await response.json();
+  try {
+    const response = await fetch("data.json?version=" + new Date().getTime());
 
-  renderKPIs(data.overview);
-  renderCompetencyChart(data.competency);
-  renderDevelopmentChart(data.developmentArea);
-  renderGroupChart("assessmentGroupChart", data.groups.assessment);
-  renderGroupChart("learningGroupChart", data.groups.learning);
-  renderLearningChart(data.learning);
-  renderThemeChart("keyLearningChart", data.themes.keyLearning);
-  renderThemeChart("applicationChart", data.themes.application);
-  renderThemeChart("futureLearningChart", data.themes.futureLearning);
-  renderAIInsight(data.aiInsight);
-  renderRecommendations(data.recommendations);
+    if (!response.ok) {
+      throw new Error("Cannot load data.json");
+    }
+
+    const data = await response.json();
+
+    renderKPIs(data.overview || {});
+    renderCompetencyChart(data.competency || []);
+    renderDevelopmentChart(data.developmentArea || []);
+    renderGroupChart("assessmentGroupChart", data.groups?.assessment || []);
+    renderGroupChart("learningGroupChart", data.groups?.learning || []);
+    renderLearningChart(data.learning || []);
+    renderThemeChart("keyLearningChart", data.themes?.keyLearning || []);
+    renderThemeChart("applicationChart", data.themes?.application || []);
+    renderThemeChart("futureLearningChart", data.themes?.futureLearning || []);
+    renderAIInsight(data.aiInsight || {});
+    renderRecommendations(data.recommendations || []);
+
+  } catch (error) {
+    console.error("Dashboard loading error:", error);
+    showError(error.message);
+  }
 }
 
 function formatNumber(value) {
-  if (typeof value === "number") {
-    return value.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  const numberValue = Number(value);
+
+  if (!isNaN(numberValue)) {
+    return numberValue.toLocaleString("en-US", {
+      maximumFractionDigits: 2
+    });
   }
-  return value;
+
+  return value || "-";
 }
 
 function renderKPIs(overview) {
   const container = document.getElementById("kpiCards");
   container.innerHTML = "";
 
-  Object.entries(overview).forEach(([label, item]) => {
+  const entries = Object.entries(overview);
+
+  if (entries.length === 0) {
+    container.innerHTML = `<div class="empty-message">No KPI data available.</div>`;
+    return;
+  }
+
+  entries.forEach(([label, item]) => {
     const card = document.createElement("div");
     card.className = "kpi-card";
 
@@ -41,50 +64,39 @@ function renderKPIs(overview) {
 }
 
 function renderCompetencyChart(items) {
-  const ctx = document.getElementById("competencyChart");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: items.map(item => item.label),
-      datasets: [{
-        label: "Average Score",
-        data: items.map(item => item.value),
-        borderWidth: 1,
-        borderRadius: 10
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+  createBarChart("competencyChart", items, "Average Score");
 }
 
 function renderDevelopmentChart(items) {
   const ctx = document.getElementById("developmentChart");
+
+  if (!items || items.length === 0) {
+    showEmptyCanvasMessage("developmentChart", "No development area data.");
+    return;
+  }
 
   new Chart(ctx, {
     type: "doughnut",
     data: {
       labels: items.map(item => item.label),
       datasets: [{
-        data: items.map(item => item.value),
+        data: items.map(item => Number(item.value)),
         borderWidth: 2
       }]
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: "bottom"
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.label}: ${context.raw}`;
+            }
+          }
         }
       }
     }
@@ -92,41 +104,29 @@ function renderDevelopmentChart(items) {
 }
 
 function renderLearningChart(items) {
-  const filtered = items.filter(item =>
-    item.label === "Average Before Level" ||
-    item.label === "Average After Level" ||
-    item.label === "Average Improvement"
-  );
+  const selectedLabels = [
+    "Average Before Level",
+    "Average After Level",
+    "Average Improvement",
+    "Improved Learners (%)"
+  ];
 
-  const ctx = document.getElementById("learningChart");
+  const filtered = items.filter(item => selectedLabels.includes(item.label));
 
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: filtered.map(item => item.label),
-      datasets: [{
-        label: "Learning Level",
-        data: filtered.map(item => item.value),
-        borderWidth: 1,
-        borderRadius: 10
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+  createBarChart("learningChart", filtered, "Value");
+}
+
+function renderGroupChart(canvasId, items) {
+  createBarChart(canvasId, items, "Participants");
 }
 
 function renderThemeChart(canvasId, items) {
   const ctx = document.getElementById(canvasId);
+
+  if (!items || items.length === 0) {
+    showEmptyCanvasMessage(canvasId, "No theme data.");
+    return;
+  }
 
   new Chart(ctx, {
     type: "bar",
@@ -134,7 +134,7 @@ function renderThemeChart(canvasId, items) {
       labels: items.map(item => item.label),
       datasets: [{
         label: "Theme Mentions",
-        data: items.map(item => item.value),
+        data: items.map(item => Number(item.value)),
         borderWidth: 1,
         borderRadius: 10
       }]
@@ -142,11 +142,57 @@ function renderThemeChart(canvasId, items) {
     options: {
       indexAxis: "y",
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
-        legend: { display: false }
+        legend: {
+          display: false
+        }
       },
       scales: {
         x: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+function createBarChart(canvasId, items, datasetLabel) {
+  const ctx = document.getElementById(canvasId);
+
+  if (!items || items.length === 0) {
+    showEmptyCanvasMessage(canvasId, "No data available.");
+    return;
+  }
+
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: items.map(item => item.label),
+      datasets: [{
+        label: datasetLabel,
+        data: items.map(item => Number(item.value)),
+        borderWidth: 1,
+        borderRadius: 10
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${datasetLabel}: ${context.raw}`;
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
           beginAtZero: true
         }
       }
@@ -158,12 +204,22 @@ function renderAIInsight(aiInsight) {
   const container = document.getElementById("aiInsight");
   container.innerHTML = "";
 
-  Object.entries(aiInsight).forEach(([label, item]) => {
+  const entries = Object.entries(aiInsight);
+
+  if (entries.length === 0) {
+    container.innerHTML = `<div class="empty-message">No AI insight available.</div>`;
+    return;
+  }
+
+  entries.forEach(([label, item]) => {
     const block = document.createElement("div");
+    block.className = "insight-block";
+
     block.innerHTML = `
       <div class="insight-title">${label}</div>
-      <p>${item.value}</p>
+      <p>${item.value || ""}</p>
     `;
+
     container.appendChild(block);
   });
 }
@@ -172,49 +228,34 @@ function renderRecommendations(recommendations) {
   const container = document.getElementById("recommendations");
   container.innerHTML = "";
 
+  if (!recommendations || recommendations.length === 0) {
+    container.innerHTML = `<div class="empty-message">No recommendations available.</div>`;
+    return;
+  }
+
   recommendations.forEach(item => {
     const div = document.createElement("div");
     div.className = "recommendation-item";
-    div.textContent = item.value;
+    div.textContent = item.value || "";
     container.appendChild(div);
   });
 }
 
-function renderGroupChart(canvasId, items) {
-  const ctx = document.getElementById(canvasId);
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: items.map(item => item.label),
-      datasets: [{
-        label: "Participants",
-        data: items.map(item => item.value),
-        borderWidth: 1,
-        borderRadius: 10
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: { display: false }
-      },
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
+function showEmptyCanvasMessage(canvasId, message) {
+  const canvas = document.getElementById(canvasId);
+  const parent = canvas.parentElement;
+  parent.innerHTML = `<div class="empty-message">${message}</div>`;
 }
 
-
-
-loadDashboard().catch(error => {
-  console.error("Dashboard loading error:", error);
-  document.body.innerHTML += `
-    <div style="margin: 32px; padding: 20px; background: #fee2e2; border-radius: 12px;">
-      Dashboard loading error. Please check data.json.
-    </div>
+function showError(message) {
+  const main = document.querySelector("main");
+  main.innerHTML += `
+    <section class="note-card">
+      <strong>Dashboard loading error</strong>
+      <p>${message}</p>
+      <p>โปรดตรวจสอบไฟล์ data.json ว่ามีข้อมูลถูกต้องหรือไม่</p>
+    </section>
   `;
-});
+}
+
+loadDashboard();
