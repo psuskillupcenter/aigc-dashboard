@@ -5,33 +5,42 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-  background: #f5f7fb;
-  color: #1f2937;
+  background: #f4f7fb;
+  color: #111827;
 }
 
 .hero {
   background: linear-gradient(135deg, #1e3a8a, #2563eb, #38bdf8);
-  color: white;
-  padding: 48px 7%;
-  border-bottom-left-radius: 32px;
-  border-bottom-right-radius: 32px;
+  color: #ffffff;
+  padding: 52px 7%;
+  border-bottom-left-radius: 28px;
+  border-bottom-right-radius: 28px;
+}
+
+.hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 13px;
-  opacity: 0.9;
+  font-weight: 700;
+  opacity: 0.92;
 }
 
 h1 {
   font-size: 42px;
-  margin: 8px 0;
+  line-height: 1.15;
+  margin: 12px 0;
 }
 
 .subtitle {
-  max-width: 760px;
+  max-width: 780px;
   font-size: 18px;
+  line-height: 1.7;
+  margin: 0;
   opacity: 0.95;
 }
 
@@ -44,29 +53,42 @@ section {
   margin-bottom: 28px;
 }
 
-h2 {
-  margin: 0 0 16px;
-  color: #0f172a;
+.section-title {
+  margin: 18px 0 16px;
 }
 
-h3 {
-  margin-top: 0;
-  color: #1e3a8a;
+.section-title h2,
+.panel h2 {
+  margin: 0 0 8px;
+}
+
+.section-title p,
+.chart-note {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0 0 16px;
 }
 
 .note-card,
 .panel,
 .kpi-card {
-  background: white;
+  background: #ffffff;
   border-radius: 22px;
-  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(148, 163, 184, 0.28);
 }
 
 .note-card {
-  padding: 20px 24px;
-  line-height: 1.7;
+  padding: 22px 26px;
+  line-height: 1.8;
   border-left: 6px solid #2563eb;
+}
+
+.note-card strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #0f172a;
 }
 
 .kpi-grid {
@@ -77,23 +99,26 @@ h3 {
 
 .kpi-card {
   padding: 22px;
+  min-height: 138px;
 }
 
 .kpi-label {
   color: #64748b;
   font-size: 14px;
+  line-height: 1.4;
   margin-bottom: 8px;
 }
 
 .kpi-value {
   font-size: 34px;
   font-weight: 800;
-  color: #1e40af;
+  color: #1d4ed8;
 }
 
 .kpi-desc {
   margin-top: 8px;
   font-size: 13px;
+  line-height: 1.5;
   color: #64748b;
 }
 
@@ -111,26 +136,53 @@ h3 {
 
 .panel {
   padding: 24px;
+  min-height: 360px;
 }
 
-canvas {
-  max-height: 330px;
+.panel h2,
+.panel h3 {
+  color: #0f172a;
+}
+
+.panel h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.chart-box {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+.chart-box.small {
+  height: 300px;
+}
+
+.insight-panel {
+  min-height: 360px;
+}
+
+.insight-block {
+  margin-bottom: 18px;
+}
+
+.insight-title {
+  font-weight: 800;
+  color: #1e40af;
+  margin-bottom: 6px;
 }
 
 .insight-panel p {
   line-height: 1.8;
-  margin: 0 0 16px;
-}
-
-.insight-title {
-  font-weight: 700;
-  color: #1e3a8a;
-  margin-top: 14px;
+  margin: 0;
+  color: #334155;
 }
 
 .recommendation-list {
   display: grid;
   gap: 14px;
+  margin-top: 12px;
 }
 
 .recommendation-item {
@@ -139,6 +191,13 @@ canvas {
   background: #eff6ff;
   border-left: 5px solid #2563eb;
   line-height: 1.7;
+  color: #1e293b;
+}
+
+.empty-message {
+  color: #94a3b8;
+  font-size: 14px;
+  padding: 20px 0;
 }
 
 footer {
@@ -147,7 +206,7 @@ footer {
   padding: 24px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 980px) {
   .kpi-grid,
   .grid-2,
   .grid-3 {
@@ -157,12 +216,12 @@ footer {
   h1 {
     font-size: 32px;
   }
-}
 
-.chart-note {
-  margin-top: -8px;
-  margin-bottom: 16px;
-  color: #64748b;
-  font-size: 13px;
-  line-height: 1.6;
+  .hero {
+    padding: 38px 6%;
+  }
+
+  .chart-box {
+    height: 260px;
+  }
 }
