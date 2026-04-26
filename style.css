@@ -158,3 +158,11 @@ footer {
     font-size: 32px;
   }
 }
+
+.chart-note {
+  margin-top: -8px;
+  margin-bottom: 16px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
