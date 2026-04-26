@@ -170,16 +170,24 @@ function renderGroups(canvasId, items, label) {
 }
 
 function renderLearning(items) {
-  const ctx = document.getElementById("learningChart");
+  const canvas = document.getElementById("learningChart");
 
-  const chart = new Chart(ctx, {
+  const selectedLabels = [
+    "Average Before Level",
+    "Average After Level",
+    "Average Improvement"
+  ];
+
+  const filtered = items.filter(i => selectedLabels.includes(i.label));
+
+  const chart = new Chart(canvas, {
     type: "bar",
     data: {
-      labels: items.map(i => i.label),
+      labels: filtered.map(i => i.label),
       datasets: [{
         label: "Value",
-        data: items.map(i => num(i.value)),
-        backgroundColor: ["#2f80ed", "#37d399", "#8b5cf6", "#ff9f43"],
+        data: filtered.map(i => num(i.value)),
+        backgroundColor: ["#2f80ed", "#37d399", "#8b5cf6"],
         borderRadius: 12
       }]
     },
