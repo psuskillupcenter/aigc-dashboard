@@ -164,7 +164,7 @@
     {
       "section": "learning",
       "type": "progress",
-      "label": "Average Before Level",
+      "label": "Average before learning",
       "value": 2.23,
       "sub_value": "level",
       "description": "ค่าเฉลี่ยระดับความรู้ก่อนเรียนจากการประเมินตนเอง",
@@ -173,7 +173,7 @@
     {
       "section": "learning",
       "type": "progress",
-      "label": "Average After Level",
+      "label": "Average after learning",
       "value": 4.08,
       "sub_value": "level",
       "description": "ค่าเฉลี่ยระดับความรู้หลังเรียนจากการประเมินตนเอง",
